@@ -33,3 +33,27 @@
   ```
   https://10.10.9.29:2443
   ```
+* push image to harbor
+
+  edit `/etc/docker/daemon.json` to trust unauthorized ca of harbor:
+
+  ```
+  {
+    "registry-mirrors":  [
+      "https://docker.itelyou.cf",
+      "https://huecker.io",
+      "https://hub.atomgit.com"
+    ],
+    "insecure-registries":[
+      "10.10.9.29:2443"
+    ]
+  }
+  ```
+
+  login harbor and push image:
+
+  ```
+  docker login https://10.10.9.29:2443
+  docker tag golang:1.22-docker 10.10.9.29:2443/library/golang:1.22-docker
+  docker push 10.10.9.29:2443/library/golang:1.22-docker
+  ```
