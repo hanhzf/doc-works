@@ -1,0 +1,30 @@
+# gitlab
+
+* [install gitlab with docker](https://docs.gitlab.com/ee/install/docker.html)
+* prepare
+    ```bash
+    sudo mkdir -p /srv/gitlab
+    export GITLAB_HOME=/srv/gitlab
+    ```
+
+* setup docker compose file[compose.yaml](./compose/compose.yaml)
+* start compose
+    ```
+    docker-compose -f compose.yaml up -d
+    ```
+* 坑点 gitlab的https端口配置的问题
+
+    ```
+    external_url 'https://10.10.9.29:1443'
+
+    The port specified in this URL must match the port published to the host by Docker. Additionally, if the NGINX listen port is not explicitly set in nginx['listen_port'], it will be pulled from the external_url. For more information see the NGINX
+
+    ```
+
+    因为我们设定的external url 是1443，所nginx内部启动的监听端口也为1443，所以 docker-commpose 的映射 1443:443 就无法生效，因为docker内部容器启动的是 1443.
+
+    故而需要再修改docker-compose.yaml 文件，将nginx的监听端口修改为 443
+
+    ```
+    nginx['listen_port']=443
+    ```

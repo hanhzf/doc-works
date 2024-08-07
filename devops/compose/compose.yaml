@@ -1,0 +1,36 @@
+version: '3.6'
+services:
+  gitlab:
+    image: gitlab/gitlab-ce:nightly
+    container_name: gitlab
+    restart: always
+    hostname: 'capital-gitlab'
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        # Add any other gitlab.rb configuration here, each on its own line
+        external_url 'https://10.10.9.29:1443'
+        letsencrypt['enable'] = false
+        prometheus_monitoring['enable'] = false
+        gitlab_rails['gitlab_ssh_host'] = '10.10.9.29'
+        gitlab_rails['gitlab_shell_ssh_port'] = 1022
+        nginx['redirect_http_to_https'] = true
+        nginx['listen_port']=443        
+    ports:
+      - '1080:80'
+      - '1443:443'
+      - '1022:22'
+    volumes:
+      - '$GITLAB_HOME/config:/etc/gitlab'
+      - '$GITLAB_HOME/logs:/var/log/gitlab'
+      - '$GITLAB_HOME/data:/var/opt/gitlab'
+    shm_size: '256m'
+
+  gerrit:
+    image: gerritcodereview/gerrit:3.6.8
+    volumes:
+       - /srv/gerrit/git-volume:/var/gerrit/git
+       - /srv/gerrit/index-volume:/var/gerrit/index
+       - /srv/gerrit/cache-volume:/var/gerrit/cache
+    ports:
+       - "29418:29418"
+       - "8080:8080"
