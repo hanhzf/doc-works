@@ -57,3 +57,18 @@
   docker tag golang:1.22-docker 10.10.9.29:2443/library/golang:1.22-docker
   docker push 10.10.9.29:2443/library/golang:1.22-docker
   ```
+* update gitlab-runner's docker image if needed
+
+  配置 `gitlab-runner` 时的image指定私有仓库的 baseimage
+  
+  ```
+  vim /etc/gitlab-runner/config.toml
+  
+  [runners.docker]
+  tls_verify = false
+  image = "10.10.9.29:2443/library/golang:1.22-docker"
+  ```
+
+    restart gitlab runner:
+    `service gitlab-runner restart`
+  
