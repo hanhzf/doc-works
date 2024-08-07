@@ -21,6 +21,8 @@
     
   harbor_admin_password: zhu88jie
   ```
+  the default auth is `admin/zhu88jie`
+
 * install harbor
   ```
   cd /srv/harbor/install
