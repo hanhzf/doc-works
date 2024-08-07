@@ -42,6 +42,9 @@ cd /srv/EasyRSA-3.0.4
 ./easyrsa --subject-alt-name="IP:10.10.9.29" gen-req 10.10.9.29 nopass
 
 ./easyrsa --subject-alt-name="IP:10.10.9.29" sign-req client 10.10.9.29
+./easyrsa --subject-alt-name="IP:10.10.9.29" sign-req client harbor
+cp /srv/cert/EasyRSA-3.0.4/pki/private/harbor.key /srv/cert/EasyRSA-3.0.4/pki/private/harbor.crt /srv/harbor/cert/
+```
 
 # 确认证书是否包含san信息
 openssl x509 -in pki/issued/10.10.9.29.crt -noout -text | grep -A1 "Subject Alternative Name"
@@ -73,7 +76,11 @@ rm -rf /srv/gitlab/config/ssl/10.10.9.29.* && cp pki/issued/10.10.9.29.crt pki/p
 root@devops01:/data/gitlab/config/ssl# ls
 10.10.9.29.crt  10.10.9.29.key
 ```
+### generate key/cert for harbor
+```
+./easyrsa --subject-alt-name="IP:10.10.9.29" gen-req harbor nopass
 
+```
 ### add ca to linux
 
 ```
