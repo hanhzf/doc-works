@@ -26,18 +26,46 @@ services:
     shm_size: '256m'
 
   gerrit:
-    image: gerritcodereview/gerrit
+    image: 'openfrontier/gerrit:3.3.2'
+    restart: always
+    hostname: 'gerrit-server'
+    environment:
+      - WEBURL=http://10.10.9.29:3080
+      - DATABASE_TYPE=postgresql
+      - DATABASE_HOSTNAME=10.10.9.29
+      - DATABASE_PORT=5432
+      - DATABASE_DATABASE=reviewdb
+      - DATABASE_USERNAME=gerrit2
+      - DATABASE_PASSWORD=zhu88jie
+      - AUTH_TYPE=LDAP
+      - LDAP_SERVER=ldap://10.10.9.29
+      - LDAP_USERNAME=cn=admin,dc=capital,dc=com
+      - LDAP_PASSWORD=zhu88jie
+      - LDAP_ACCOUNTPATTERN=(&(mail=$${username}))
+      - LDAP_ACCOUNTBASE=ou=people,dc=capital,dc=com
+      - LDAP_ACCOUNTSSHUSERNAME=$${uid.toLowerCase}
+      - LDAP_ACCOUNTFULLNAME=$${sn.toLowerCase}
+      - GERRIT_INIT_ARGS=--install-plugin=replication --install-plugin=commit-message-length-validator --install-plugin=download-commands
     ports:
-      - "29418:29418"
-      - "3080:8080"
-    depends_on:
-      - ldap
+      - '3080:8080'
+      - '29418:29418'
     volumes:
       - /srv/gerrit/etc:/var/gerrit/etc
       - /srv/gerrit/git:/var/gerrit/git
       - /srv/gerrit/db:/var/gerrit/db
       - /srv/gerrit/index:/var/gerrit/index
       - /srv/gerrit/cache:/var/gerrit/cache
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14.1-alpine
+    container_name: postgres
+    restart: always
     environment:
-      - CANONICAL_WEB_URL=http://10.10.9.29
-    # command: init
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=zhu88jie
+    ports:
+      - '5432:5432'
+    volumes:
+      - /srv/postgres/data:/var/lib/postgresql/data
