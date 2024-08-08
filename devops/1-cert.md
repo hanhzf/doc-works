@@ -36,7 +36,7 @@ Currently all the existing certs are located under **/srv/cert/EasyRSA-3.0.4** o
 As we have disabled letencrypt, we need to prepare the gitlab certs ourselves, follow [generate certificate](./cert.md) to create certificate for gitlab:
 
 ```
-cd /srv/EasyRSA-3.0.4
+cd /srv/cert/EasyRSA-3.0.4
 
 ./easyrsa --subject-alt-name="IP:10.10.9.29" gen-req 10.10.9.29 nopass
 
@@ -44,6 +44,18 @@ cd /srv/EasyRSA-3.0.4
 ./easyrsa --subject-alt-name="IP:10.10.9.29" sign-req client harbor
 cp /srv/cert/EasyRSA-3.0.4/pki/private/harbor.key /srv/cert/EasyRSA-3.0.4/pki/private/harbor.crt /srv/harbor/cert/
 ```
+
+## generate ldap certificate
+
+```
+cd /srv/cert/EasyRSA-3.0.4
+
+./easyrsa --subject-alt-name="IP:10.10.9.29" gen-req ldap nopass
+./easyrsa --subject-alt-name="IP:10.10.9.29" sign-req client ldap
+
+cp /srv/cert/EasyRSA-3.0.4/pki/private/ldap.key /srv/cert/EasyRSA-3.0.4/pki/issued/harbor.crt /srv/cert/EasyRSA-3.0.4/pki/ca.crt /srv/ldap/cert/
+```
+
 
 ## 确认证书是否包含san信息
 
