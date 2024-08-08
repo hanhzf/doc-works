@@ -11,7 +11,7 @@ services:
       LDAP_ORGANISATION: "capital"
       LDAP_DOMAIN: "capital.com"
       LDAP_BASE_DN: "dc=capital,dc=com"
-      LDAP_ADMIN_PASSWORD: "zhu88jie!"
+      LDAP_ADMIN_PASSWORD: "zhu88jie"
       LDAP_TLS_CIPHER_SUITE: "NORMAL"
       LDAP_TLS_VERIFY_CLIENT: "allow"
     tty: true
@@ -35,7 +35,6 @@ services:
       PHPLDAPADMIN_HTTPS_CA_CRT_FILENAME: "ca.crt"
       #PHPLDAPADMIN_HTTPS: "false"
     ports:
-            #- "0.0.0.0:8080:80"
       - "0.0.0.0:8443:443"
     depends_on:
       - openldap
