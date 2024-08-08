@@ -2,7 +2,7 @@
 
 Currently all the existing certs are located under **/srv/cert/EasyRSA-3.0.4** on node **devops01(172.20.0.2)**.
 
-### init PKI and generate ca
+## init PKI and generate ca
 * mkdir -p /srv/cert && cd /srv/cert
 * wget -P ~/ https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.4/EasyRSA-3.0.4.tgz
 * cd ~
@@ -31,8 +31,7 @@ Currently all the existing certs are located under **/srv/cert/EasyRSA-3.0.4** o
   set common name to capital: 
   `Common Name (eg: your user, host, or server name) [Easy-RSA CA]:capital`
 
-### generate gitlib certificate
-
+## generate gitlib certificate
 
 As we have disabled letencrypt, we need to prepare the gitlab certs ourselves, follow [generate certificate](./cert.md) to create certificate for gitlab:
 
@@ -46,15 +45,15 @@ cd /srv/EasyRSA-3.0.4
 cp /srv/cert/EasyRSA-3.0.4/pki/private/harbor.key /srv/cert/EasyRSA-3.0.4/pki/private/harbor.crt /srv/harbor/cert/
 ```
 
-# 确认证书是否包含san信息
+## 确认证书是否包含san信息
+
+```
 openssl x509 -in pki/issued/10.10.9.29.crt -noout -text | grep -A1 "Subject Alternative Name"
 
 root@devops01:/srv/EasyRSA-3.0.4# ls pki/private/
 10.10.9.29.key  ca.key  client.key  ldap.key  ldap.key.kF6IHtj4Vx  server.key
-
 root@devops01:/srv/EasyRSA-3.0.4# ls pki/issued/
 10.10.9.29.crt  client.crt  ldap.crt  server.crt
-
 ```
 
 编辑 `/srv/cert/EasyRSA-3.0.4/x509-types`，增加 clientAuth 信息:
@@ -76,12 +75,14 @@ rm -rf /srv/gitlab/config/ssl/10.10.9.29.* && cp pki/issued/10.10.9.29.crt pki/p
 root@devops01:/data/gitlab/config/ssl# ls
 10.10.9.29.crt  10.10.9.29.key
 ```
-### generate key/cert for harbor
+
+## generate key/cert for harbor
 ```
 ./easyrsa --subject-alt-name="IP:10.10.9.29" gen-req harbor nopass
 
 ```
-### add ca to linux
+
+## add ca to linux
 
 ```
 cp /srv/cert/EasyRSA-3.0.4/pki/ca.crt  /etc/pki/ca-trust/source/anchors/devops-ca.crt
@@ -89,6 +90,6 @@ sudo update-ca-trust
 sudo systemctl restart gitlab-runner
 ```
 
-### note
+## note
 
 gitlab-runner 要求证书中必须有san信息。
