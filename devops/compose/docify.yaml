@@ -1,0 +1,10 @@
+version: '3.6'
+services:
+  docify:
+    image: 10.10.9.29:2443/library/docify:self
+    container_name: docify
+    restart: always
+    ports:
+      - '3000:3000'
+    volumes:
+      - /srv/moss/document:/docs
