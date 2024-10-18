@@ -72,3 +72,13 @@
     restart gitlab runner:
     `service gitlab-runner restart`
   
+## harbor ldap 认证配置
+
+```
+1.	LDAP URL：ldap://10.10.9.39
+2.	LDAP搜索DN：cn=readonly,dc=capitaleco,dc=com
+3.	LDAP搜索密码：mypassword
+4.	LDAP基础DN：ou=people,dc=capitaleco,dc=com
+5.	LDAP用户UID：mail
+6.	LDAP过滤器：(objectClass=inetOrgPerson)
+```
